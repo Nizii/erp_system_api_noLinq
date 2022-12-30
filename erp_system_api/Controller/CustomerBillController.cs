@@ -146,9 +146,15 @@ namespace erp_system_api
                 cmd.Parameters.AddWithValue("@CustomerStreet", bill.CustomerStreet);
                 cmd.Parameters.AddWithValue("@CustomerPostcode", bill.CustomerPostcode);
                 cmd.Parameters.AddWithValue("@Amount", bill.Amount);
-                cmd.Parameters.AddWithValue("@Currency", bill.Currency);
+                
+                DateTime io = bill.IssuedOn;
+                Debug.WriteLine("Date 1 " + bill.IssuedOn);
+                io.ToString("dd/MM/yyyy");
+                cmd.Parameters.AddWithValue("@IssuedOn", io);
 
-                cmd.Parameters.AddWithValue("@IssuedOn", bill.IssuedOn);
+                DateTime pd = bill.PaymentDate;
+                pd.ToString("dd/MM/yyyy");
+                cmd.Parameters.AddWithValue("@PaymentDate", pd);
 
                 DateTime pd = bill.PaymentDate;
                 pd.ToString("yyyy-MM-dd");

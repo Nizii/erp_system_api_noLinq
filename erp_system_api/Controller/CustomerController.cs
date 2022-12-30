@@ -151,31 +151,32 @@ namespace erp_system_api
             con.Close();
             return new JsonResult("Done");
         }
-    /*
+    
         [HttpPut]
-        public JsonResult Put(Models.Customer cus)
+        public JsonResult Put(Customer cus)
         {
-            
+            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-
+            */
             try
             {
                 con.Open();
-                var cmd = new MySqlCommand("Update customer set surname=@surname, lastname=@lastname, dob=@dob, street=@street, nr=@nr, postcode=@postcode, country=@country, cellphone=@cellphone, landlinephone=@landlinephone, note=@note, email=@email where customer_nr ="+cus.customer_nr, con);
-                cmd.Parameters.AddWithValue("@surname", cus.surname);
-                cmd.Parameters.AddWithValue("@lastname", cus.lastname);
-                cmd.Parameters.AddWithValue("@dob", "2022-02-02");
-                cmd.Parameters.AddWithValue("@street", cus.street);
-                cmd.Parameters.AddWithValue("@nr", cus.nr);
-                cmd.Parameters.AddWithValue("@postcode", cus.postcode);
-                cmd.Parameters.AddWithValue("@country", cus.country);
-                cmd.Parameters.AddWithValue("@cellphone", cus.cellphone);
-                cmd.Parameters.AddWithValue("@landlinephone", cus.landlinephone);
-                cmd.Parameters.AddWithValue("@note", cus.note);
-                cmd.Parameters.AddWithValue("@email", cus.email);
+                var cmd = new MySqlCommand("Update customer set CompanyName=@CompanyName, Surname=@Surname, Lastname=@Lastname, Dob=@Dob, Street=@Street, Nr=@Nr, Postcode=@Postcode, Country=@Country, Cellphone=@Cellphone, Landlinephone=@Landlinephone, Note=@Note, Email=@Email where CustomerNr ="+cus.CustomerNr, con);
+                cmd.Parameters.AddWithValue("@CompanyName", cus.CompanyName);
+                cmd.Parameters.AddWithValue("@Surname", cus.Surname);
+                cmd.Parameters.AddWithValue("@Lastname", cus.Lastname);
+                cmd.Parameters.AddWithValue("@Dob", "2022-02-02");
+                cmd.Parameters.AddWithValue("@Street", cus.Street);
+                cmd.Parameters.AddWithValue("@Nr", cus.Nr);
+                cmd.Parameters.AddWithValue("@Postcode", cus.Postcode);
+                cmd.Parameters.AddWithValue("@Country", cus.Country);
+                cmd.Parameters.AddWithValue("@Cellphone", cus.Cellphone);
+                cmd.Parameters.AddWithValue("@Landlinephone", cus.Landlinephone);
+                cmd.Parameters.AddWithValue("@Note", cus.Note);
+                cmd.Parameters.AddWithValue("@Email", cus.Email);
                 var result = cmd.ExecuteNonQuery();
                 Debug.WriteLine(result);
             }
@@ -186,7 +187,7 @@ namespace erp_system_api
             con.Close();
             return new JsonResult("Done");
         }
-        */
+        
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
