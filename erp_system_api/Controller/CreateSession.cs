@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Microsoft.Extensions.Caching.Memory;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 
 namespace erp_system_api
 {
@@ -23,23 +18,40 @@ namespace erp_system_api
             con = new MySqlConnection(connStr);
         }
 
-
         [HttpGet]
-        [Route("{username}/{password}")]
-        //[Route("set")]
-        public JsonResult Set(string username, string password)
+        [Route("login/{username}/{password}")]
+        public JsonResult Login(string username, string password)
         {
             var user = GetUser(username, password);
 
             if (user != null)
             {
-                HttpContext.Session.Set<User>(username, user);
+                HttpContext.Session.Set(username, user);
                 return new JsonResult($"{user.user_name}, save to session");
             }
-            else
+            else return new JsonResult("User not found");
+        }
+
+        [HttpGet]
+        [Route("sign-up/{username}/{password}")]
+        public JsonResult SignUp(string username, string password)
+        {
+            if (CheckIfUserAlreadyExists(username))
             {
-                return new JsonResult("User not found");
+                User user = new()
+                {
+                    user_name = username,
+                    user_password = BCrypt.Net.BCrypt.HashPassword(password, 12)
+                };
+
+                if (InsertUser(user))
+                {
+                    HttpContext.Session.Set(username, user);
+                    return new JsonResult($"{user.user_name}, save to session");
+                }
+                return new JsonResult(null);
             }
+            else return new JsonResult(null);
         }
 
         [HttpGet]
@@ -60,49 +72,69 @@ namespace erp_system_api
 
         protected User GetUser(string username, string password)
         {
-            User user = null;
             try
             {
                 con.Open();
                 var cmd = new MySqlCommand("SELECT * from user where user_name ='" + username +"'", con);
                 MySqlDataReader reader = cmd.ExecuteReader();
+                con.Close();
                 if (reader.Read())
                 {
-                    user = new User
+                    User user = new User
                     {
                         user_nr = (SByte)reader["user_id"],
                         user_name = reader["user_name"].ToString(),
                         user_password = reader["user_password"].ToString(),
                     };
 
-                    if (BCrypt.Net.BCrypt.Verify(password, user.user_password))
-                        return user;
-                    return null;
-                } 
-                else
-                {
-                    Debug.WriteLine("User not found");
+                    if (BCrypt.Net.BCrypt.Verify(password, user.user_password)) return user;
                     return null;
                 }
+                else return null;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Get User failed with Ex: " + ex.ToString());
-            }
-            con.Close();
-            return user;
+                return null;
+            }  
         }
 
-        protected void InsertNewUser(User user)
+        protected Boolean CheckIfUserAlreadyExists(string username)
         {
             try
             {
+                con.Open();
+                var cmd = new MySqlCommand("SELECT * from user where user_name ='" + username + "'", con);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                con.Close();
 
+                if (reader.Read()) return false;
+                else return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Insert failed with Ex: " + ex);
+                Debug.WriteLine("Insert failed SQL Problem: " + ex.ToString());
             }
+            return false;
+        }
+
+        protected Boolean InsertUser(User user)
+        {
+            try
+            {
+                con.Open();
+                var cmd = new MySqlCommand("INSERT INTO user (user_name,user_password) VALUES (@user_name,@user_password)", con);
+                cmd.Parameters.AddWithValue("@user_name", user.user_name);
+                cmd.Parameters.AddWithValue("@user_password", user.user_password);
+                var result = cmd.ExecuteNonQuery();
+                con.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Insert failed SQL Problem: " + ex.ToString());
+            }
+            return false;
         }
     }
 }

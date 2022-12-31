@@ -156,9 +156,6 @@ namespace erp_system_api
                 pd.ToString("dd/MM/yyyy");
                 cmd.Parameters.AddWithValue("@PaymentDate", pd);
 
-                DateTime pd = bill.PaymentDate;
-                pd.ToString("yyyy-MM-dd");
-                cmd.Parameters.AddWithValue("@PaymentDate", bill.PaymentDate);
                 var result = cmd.ExecuteNonQuery();
                 Debug.WriteLine(result);
             }
