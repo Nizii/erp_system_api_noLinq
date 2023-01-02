@@ -77,7 +77,6 @@ namespace erp_system_api
                 con.Open();
                 var cmd = new MySqlCommand("SELECT * from user where user_name ='" + username +"'", con);
                 MySqlDataReader reader = cmd.ExecuteReader();
-                con.Close();
                 if (reader.Read())
                 {
                     User user = new User
@@ -88,13 +87,19 @@ namespace erp_system_api
                     };
 
                     if (BCrypt.Net.BCrypt.Verify(password, user.user_password)) return user;
+                    con.Close();
                     return null;
                 }
-                else return null;
+                else
+                {
+                    con.Close();
+                    return null;
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Get User failed with Ex: " + ex.ToString());
+                con.Close();
                 return null;
             }  
         }

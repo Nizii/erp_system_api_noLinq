@@ -38,26 +38,27 @@ namespace erp_system_api
                 var cmd = new MySqlCommand("SELECT * from customerBill", con);
                 Int32 count = (Int32)cmd.ExecuteScalar();
                 MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    for (int i = 0; i < count; i++)
+                DataTable dt = new DataTable();
+                dt.Load(reader);
+                int rows = dt.Rows.Count;
+                Debug.WriteLine("Rows " + rows);
+                    foreach (DataRow dr in dt.Rows)
                     {
                         CustomerBill customerBill = new CustomerBill
                         {
-                            CustomerBillNr = (Int32)reader["CustomerBillNr"],
-                            CompanyName = reader["CompanyName"].ToString(),
-                            ContactPerson = reader["ContactPerson"].ToString(),
-                            CustomerStreet = reader["CustomerStreet"].ToString(),
-                            CustomerPostcode = reader["CustomerPostcode"].ToString(),
-                            Amount = (decimal)reader["Amount"],
-                            Currency = reader["Currency"].ToString(),
-                            IssuedOn = (DateTime)reader["IssuedOn"],
-                            PaymentDate = (DateTime)reader["PaymentDate"],
+                            CustomerBillNr = (Int32)dr["CustomerBillNr"],
+                            CompanyName = dr["CompanyName"].ToString(),
+                            ContactPerson = dr["ContactPerson"].ToString(),
+                            CustomerStreet = dr["CustomerStreet"].ToString(),
+                            CustomerPostcode = dr["CustomerPostcode"].ToString(),
+                            Amount = (decimal)dr["Amount"],
+                            Currency = dr["Currency"].ToString(),
+                            IssuedOn = (DateTime)dr["IssuedOn"],
+                            PaymentDate = (DateTime)dr["PaymentDate"],
                         };
                         customerBillList.Add(customerBill);
                     }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -148,7 +149,6 @@ namespace erp_system_api
                 cmd.Parameters.AddWithValue("@Amount", bill.Amount);
                 
                 DateTime io = bill.IssuedOn;
-                Debug.WriteLine("Date 1 " + bill.IssuedOn);
                 io.ToString("dd/MM/yyyy");
                 cmd.Parameters.AddWithValue("@IssuedOn", io);
 
