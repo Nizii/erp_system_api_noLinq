@@ -41,7 +41,6 @@ namespace erp_system_api
                 DataTable dt = new DataTable();
                 dt.Load(reader);
                 int rows = dt.Rows.Count;
-                Debug.WriteLine("Rows " + rows);
                     foreach (DataRow dr in dt.Rows)
                     {
                         CustomerBill customerBill = new CustomerBill

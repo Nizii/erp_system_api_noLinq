@@ -23,13 +23,13 @@ namespace erp_system_api
         public JsonResult Login(string username, string password)
         {
             var user = GetUser(username, password);
-
+            //Debug.WriteLine("User "+user.user_name + " " + user.user_password);
             if (user != null)
             {
                 HttpContext.Session.Set(username, user);
                 return new JsonResult($"{user.user_name}, save to session");
             }
-            else return new JsonResult("User not found");
+            else return new JsonResult(null);
         }
 
         [HttpGet]
