@@ -96,6 +96,48 @@ namespace erp_system_api
         }
 
 
+        [HttpGet("value/{value}")]
+        public JsonResult Get(string value)
+        {
+            List<Product> productList = new List<Product>();
+            try
+            {
+                con.Open();
+                var cmd = new MySqlCommand("SELECT * from product order by " + value + " ASC", con);
+                var scl = new MySqlCommand("SELECT * from product", con);
+                Int32 count = (Int32)scl.ExecuteScalar();
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        Product product = new Product
+                        {
+                            product_nr = (Int32)reader["product_nr"],
+                            product_name = reader["product_name"].ToString(),
+                            product_size = reader["product_size"].ToString(),
+                            description = reader["description"].ToString(),
+                            units_available = (Int32)reader["units_available"],
+                            unit = reader["unit"].ToString(),
+                            purchasing_price_per_unit = (decimal)reader["purchasing_price_per_unit"],
+                            selling_price_per_unit = (decimal)reader["selling_price_per_unit"],
+                        };
+
+                        productList.Add(product);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Debug.WriteLine("MySql " + ex.ToString());
+            }
+            con.Close();
+            return new JsonResult(productList);
+        }
+
+
         [HttpPost]
         public JsonResult Post(Product pro)
         {

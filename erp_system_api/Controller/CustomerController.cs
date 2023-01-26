@@ -115,7 +115,63 @@ namespace erp_system_api
             con.Close();
             return new JsonResult(customer);
         }
-        
+
+        [HttpGet("value/{value}")]
+        public JsonResult Get(string value)
+        {
+            /*
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+            */
+
+            Debug.WriteLine("Value "+ value);
+            List<Customer> customerList = new List<Customer>();
+            try
+            {
+                con.Open();
+                var cmd = new MySqlCommand("SELECT * from customer order by " + value + " ASC", con);
+                var scl = new MySqlCommand("SELECT * from customer", con);
+                Int32 count = (Int32)scl.ExecuteScalar();
+                Debug.WriteLine("Execute Scalar " + count);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                Debug.WriteLine("DB " + con);
+                while (reader.Read())
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        Customer customer = new Customer
+                        {
+                            CustomerNr = (int)reader["CustomerNr"],
+                            CompanyName = reader["CompanyName"].ToString(),
+                            Surname = reader["Surname"].ToString(),
+                            Lastname = reader["Lastname"].ToString(),
+                            Dob = reader["Dob"].ToString(),
+                            Street = reader["Street"].ToString(),
+                            Nr = reader["Nr"].ToString(),
+                            Postcode = reader["Postcode"].ToString(),
+                            Country = reader["Country"].ToString(),
+                            Cellphone = reader["Cellphone"].ToString(),
+                            Landlinephone = reader["Landlinephone"].ToString(),
+                            Note = reader["Note"].ToString(),
+                            Email = reader["Email"].ToString()
+                        };
+                        customerList.Add(customer);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("MySql " + ex.ToString());
+                Debug.WriteLine("Session" + ex.ToString());
+            }
+            con.Close();
+            Debug.WriteLine("Array " + customerList);
+            return new JsonResult(customerList);
+        }
+
+
         [HttpPost]
         public JsonResult Post(Customer cus)
         {

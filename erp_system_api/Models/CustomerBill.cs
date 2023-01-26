@@ -18,6 +18,8 @@ namespace erp_system_api
 
         public DateTime PaymentDate { get; set; }
 
+        public String State { get; set; }
+
         public Int32 CustomerBillNr { get; set; }
     }
 }
