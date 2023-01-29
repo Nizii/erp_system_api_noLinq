@@ -29,7 +29,11 @@ namespace erp_system_api
         [HttpGet]
         public JsonResult Get()
         {
-          
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             List<Customer> customerList = new List<Customer>();
             try
             {
@@ -75,12 +79,11 @@ namespace erp_system_api
         [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
-            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-            */
+
             Customer customer = null;
             try
             {
@@ -119,12 +122,10 @@ namespace erp_system_api
         [HttpGet("value/{value}")]
         public JsonResult Get(string value)
         {
-            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-            */
 
             Debug.WriteLine("Value "+ value);
             List<Customer> customerList = new List<Customer>();
@@ -175,12 +176,11 @@ namespace erp_system_api
         [HttpPost]
         public JsonResult Post(Customer cus)
         {
-            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-            */
+
             try
             {
                 con.Open();
@@ -211,12 +211,11 @@ namespace erp_system_api
         [HttpPut]
         public JsonResult Put(Customer cus)
         {
-            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-            */
+
             try
             {
                 con.Open();
@@ -247,12 +246,11 @@ namespace erp_system_api
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            /*
             if (HttpContext.Session.Get("Nizam") is null)
             {
                 return new JsonResult(null);
             }
-            */
+
             try
             {
                 con.Open();

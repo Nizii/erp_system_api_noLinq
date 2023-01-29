@@ -32,6 +32,11 @@ namespace erp_system_api
         [HttpGet]
         public JsonResult Get()
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             List<CustomerBill> customerBillList = new List<CustomerBill>();
             try
             {
@@ -72,6 +77,11 @@ namespace erp_system_api
         [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             CustomerBill customerBill = null;
             try
             {
@@ -106,6 +116,11 @@ namespace erp_system_api
         [HttpGet("value/{value}")]
         public JsonResult Get(string value)
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             List<CustomerBill> customerBillList = new List<CustomerBill>();
             try
             {
@@ -147,6 +162,11 @@ namespace erp_system_api
         [HttpPost]
         public JsonResult Post(CustomerBill bill)
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             try
             {
                 con.Open();
@@ -183,6 +203,11 @@ namespace erp_system_api
         [HttpPut]
         public JsonResult Put(CustomerBill bill)
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             try
             {
                 con.Open();
@@ -219,6 +244,11 @@ namespace erp_system_api
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
+            if (HttpContext.Session.Get("Nizam") is null)
+            {
+                return new JsonResult(null);
+            }
+
             try
             {
                 con.Open();
